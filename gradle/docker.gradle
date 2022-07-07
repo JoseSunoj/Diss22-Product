@@ -1,6 +1,6 @@
 jib {
     from {
-        image = "eclipse-temurin:11-jre-focal"
+        image = "eclipse-temurin@sha256:b102a6085d2b0c7530b3a21fc777189fa29daaf255435b4f133de5c317a17ff6"
     }
     to {
         image = "product:latest"
