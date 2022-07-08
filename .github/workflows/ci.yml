@@ -97,8 +97,8 @@ jobs:
           image: store
           args: --severity-threshold=high  
 
-  Package-Build-Publish-Update:
-    name: Package, build and publish container image using jib, and Update the GitOps repository
+  Package-Build-Publish:
+    name: Package, build and publish container image using jib
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
     runs-on: ubuntu-latest
     needs: [validation, snyk-test, backend-test, sonar-scan, snykcontainer-scan]
@@ -126,7 +126,16 @@ jobs:
         #  GIT_TAG=:${GITHUB_REF#refs/tags/}
         #  DOCKER_TAG=${GIT_TAG#:refs/heads/main}
         #  ./gradlew jib -Djib.to.image="${{ secrets.DOCKER_USERNAME }}"/diss22-product${DOCKER_TAG} -Djib.to.auth.username="${{ secrets.DOCKER_USERNAME }}" -Djib.to.auth.password="${{ secrets.DOCKER_PASSWORD }}" -Pprod --no-daemon
-      
+    outputs:
+      docker-tag: ${{ steps.myid.outputs.sha8 }} 
+
+  Update:
+    name: Update manifets in the GitOps repo
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
+    runs-on: ubuntu-latest
+    needs: Package-Build-Publish
+    timeout-minutes: 40
+    steps:
       - name: Setup Kustomize
         uses: imranismail/setup-kustomize@v1
       - name: Update Kubernetes resources
@@ -134,7 +143,7 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }} 
           ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }} 
         run: |
-          DOCKER_TAG=${{ steps.myid.outputs.sha8 }}
+          DOCKER_TAG=${{ needs.Package-Build-Publish.outputs.docker-tag }}
           TEMP_FOLDER="$(mktemp -d)" 
           git clone -b develop "https://${{github.actor}}:${ACCESS_TOKEN}@github.com/JoseSunoj/Diss22-IaC.git" ${TEMP_FOLDER}  
           cd ${TEMP_FOLDER}/manifests/application
