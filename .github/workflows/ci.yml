@@ -31,14 +31,12 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-dependencies
       
-      - uses: snyk/actions/gradle-jdk11@dc22abdbe8ec00e2a925256fef96f319ca5510ce
+      - uses: snyk/actions/gradle@dc22abdbe8ec00e2a925256fef96f319ca5510ce
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: 
-            --file=build.gradle
-            --severity-threshold=high 
+          args: --severity-threshold=high 
           json: true
       - uses: garethr/snyk-to-sarif@ae8e0fc00597b6befd95a03df5729990da1d7a33
       - uses: actions/upload-artifact@v2
