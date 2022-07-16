@@ -66,6 +66,8 @@ jobs:
 
   sonar-scan:
     name: SonarCloud Scan
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
@@ -94,6 +96,8 @@ jobs:
 
   snykcontainer-scan:
     name: Scan container image for vulnerabilities
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     timeout-minutes: 40 
     steps:
