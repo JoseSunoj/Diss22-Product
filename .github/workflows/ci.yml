@@ -37,7 +37,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: 
-            --all-projects
+            --file=build.gradle
             --severity-threshold=high 
             --sarif-file-output=snyk.sarif
       - name: Upload result to GitHub Code Scanning
