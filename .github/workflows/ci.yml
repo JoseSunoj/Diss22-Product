@@ -30,14 +30,20 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-dependencies
-      
-      - uses: snyk/actions/gradle@dc22abdbe8ec00e2a925256fef96f319ca5510ce
+      - name: Install Snyk CLI
+        run: |
+          npm install snyk
+          chmod +x snyk
+      - name: Snyk test
         continue-on-error: true
+        run: ./snyk test --all-projects --severity-threshold=high --json
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --severity-threshold=high 
-          json: true
+      - name: Snyk monitor
+        continue-on-error: true
+        run: ./snyk monitor --all-projects --severity-threshold=high --json
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}  
       - uses: garethr/snyk-to-sarif@ae8e0fc00597b6befd95a03df5729990da1d7a33
       - uses: actions/upload-artifact@v2
         with:
