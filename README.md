@@ -1,6 +1,16 @@
 # Diss22-Product
 Product Microservice
 
+This is part of a Cloud-native microservices application. Other services are can be accessed from the links below.
+
+* [store gateway](https://github.com/JoseSunoj/Diss22-Store)
+* [invoice](https://github.com/JoseSunoj/Diss22-Invoice)
+* [notification](https://github.com/JoseSunoj/Diss22-Notification)
+
+The application is deployed to a GKE cluster using a pull-based GitOps approach with the help of Terraform Cloud and Argo CD. The GitOps repo with Terraform and YAML configuration can be accessed from the following link.
+
+* [GitOps Repo](https://github.com/JoseSunoj/Diss22-IaC)
+
 ## product
 
 This application was generated using JHipster 7.8.1, you can find documentation and help at [https://www.jhipster.tech](https://www.jhipster.tech).
